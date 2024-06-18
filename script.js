@@ -10,7 +10,7 @@ function randomString(character){
 }
 
 function finalString(){
-    finalString = ''
+    finalAnsString = ''
     resultString = ''
     let lowerCaseCheckBox = document.querySelector('#lowerCase');
     let upperCaseCheckBox = document.querySelector('#upperCase');
@@ -24,32 +24,41 @@ function finalString(){
        symbolCheckBox.checked==false && 
        spaceCheckBox.checked==false){
         alert("Please tick the revalent checkbox to generate password");
-        return ;
+        return
     }
 
     if(lowerCaseCheckBox.checked){
         resultString += randomString(lowercaseCharacters);
-        finalString += lowercaseCharacters;
+        finalAnsString += lowercaseCharacters;
     }
     if(upperCaseCheckBox.checked){
         resultString += randomString(uppercaseCharacters);
-        finalString += uppercaseCharacters;
+        finalAnsString += uppercaseCharacters;
     }
     if(numberCheckBox.checked){
         resultString += randomString(numbers);
-        finalString += numbers;
+        finalAnsString += numbers;
     }
     if(symbolCheckBox.checked){
         resultString += randomString(specialCharacters);
-        finalString += specialCharacters;
+        finalAnsString += specialCharacters;
     }
     if(spaceCheckBox.checked){
         resultString += randomString(space);
-        finalString += space
+        finalAnsString += space
     }
 
     while(resultString.length<=12){
-        resultString += randomString(finalString);
+        resultString += randomString(finalAnsString);
+    }
+
+    let exclude_duplicate = document.getElementById("excludeDuplicates");
+    let passwordStatus = checkedDuplicate(resultString);
+    console.log(passwordStatus);
+
+    while(exclude_duplicate.checked==true && passwordStatus==false){
+        finalString();
+        passwordStatus = checkedDuplicate(resultString);
     }
     let password = document.querySelector('#password');
     password.style.color = 'white';
@@ -66,8 +75,18 @@ function copyPassword(){
     copyBtn.textContent = 'Copied';
 }
 
-function changeBorderStyle(){
-    let inputField = document.getElementById('password');
+function checkedDuplicate(passwordToBeChecked){
+    let obj = {}
+    console.log(passwordToBeChecked);
+    let length = passwordToBeChecked.length;
+    for(let i=0;i<length;i++){
+        console.log(passwordToBeChecked[i]);
+        if (passwordToBeChecked[i] in obj)
+            return false;
+        obj[passwordToBeChecked[i]] = 1
+    }
+     console.log(obj);
+    return true;
 }
 
 let btn = document.querySelector("#generatePassword")
@@ -75,6 +94,3 @@ btn.addEventListener("click", finalString);
 
 let copyBtn = document.querySelector("#copy");
 copyBtn.addEventListener("click", copyPassword);
-
-let inputFieldPassword = document.getElementById('password');
-inputFieldPassword.addEventListener('click', changeBorderStyle)
